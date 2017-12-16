@@ -4,6 +4,9 @@ Assigment 2 - x64 rev tcp shell with auth
 
 Assigment 3 - x64 Egg hunter
 
+Assigment 4 - Custom x64 encoder with a basic polymorphic engine implementation
+
+
 ---
 
 This code has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:
