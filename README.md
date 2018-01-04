@@ -6,6 +6,8 @@ Assigment 3 - x64 Egg hunter
 
 Assigment 4 - Custom x64 encoder with a basic polymorphic engine implementation
 
+Assigment 6 - Get 3 shellcodes from shell-storm and alter them (polymorphism) and make them smaller if possible
+
 
 ---
 
