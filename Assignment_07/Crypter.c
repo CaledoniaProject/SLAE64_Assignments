@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "tables.h"
 #define u32 unsigned int
 #define BYTE unsigned char
@@ -330,6 +331,13 @@ void printHex(BYTE b[], int lim)
 	printf("\\x%02X", (u32)b[i]);
 }
 
+char* gen_rdm_bytestream (size_t num_bytes) {
+    char *stream = malloc (num_bytes);
+    for (size_t i = 0; i < num_bytes; i++)
+        stream[i] = rand();
+    return stream;
+}
+
 int main(int argc, char **argv)
 {
     u32 *S;
@@ -351,21 +359,22 @@ int main(int argc, char **argv)
     free(S);
     int i=0;
     int j=16;
+    srand(time(NULL));
     printf("\nTwofish encrypted shellcode:\n");
     while (i < shellcode_len) {
-        memset(plaintext, 0, 16); // zero out - FIX
-	if (j <= shellcode_len) {
+        memcpy(plaintext, gen_rdm_bytestream(16), 16); // this will make it so the padding bytes are random, and hence more secure.
+        if (j <= shellcode_len) {
             memcpy(plaintext, &shellcode[i], 16);
-	    i=j; j+= 16;
-	}else {
-	    sh_bytes_left = shellcode_len%16;
-	    memcpy(plaintext, &shellcode[i],sh_bytes_left);
-	    i=j;
+            i=j; j+= 16;
+        }else {
+            sh_bytes_left = shellcode_len%16;
+            memcpy(plaintext, &shellcode[i],sh_bytes_left);
+            i=j;
         }
         //printf("before-->"); printHex(plaintext, 16); printf("\n");
         encrypt(K, QF, plaintext);
         //printf("after--->"); printHex(plaintext, 16); printf("\n");
-	printHex(plaintext, 16);
+        printHex(plaintext, 16);
     }
     printf("\n\n");
     return 0;
