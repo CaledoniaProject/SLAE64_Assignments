@@ -8,7 +8,7 @@ Assigment 4 - Custom x64 encoder with a basic polymorphic engine implementation
 
 Assigment 6 - Get 3 shellcodes from shell-storm and alter them (polymorphism) and make them smaller if possible
 
-Assigment 7 - Crypter with DNS (CName) password retrieval, x64 shellcode decryption, and execution
+Assigment 7 - Twofish Crypter with DNS (CName) password retrieval, x64 shellcode decryption, and execution
 
 ---
 
