@@ -9,7 +9,7 @@ Assigment 4 - [Custom x64 encoder with a basic polymorphic engine implementation
 
 Assigment 6 - [Get 3 shellcodes from shell-storm and alter them (polymorphism) and make them smaller if possible](https://pentesterslife.blog/2018/01/13/polymorphic-and-smaller-versions-of-three-shell-storms-x64-shellcodes-including-the-smallest-execve-bin-sh/)
 
-Assigment 7 - [Twofish Crypter with DNS (CName) password retrieval, x64 shellcode decryption, and execution](https://pentesterslife.blog/)
+Assigment 7 - [Twofish Crypter with DNS (CName) password retrieval, x64 shellcode decryption, and execution](https://pentesterslife.blog/2018/02/02/twofish-crypter-with-dns-cname-password-retrieval-x64-shellcode-decryption-and-execution/)
 
 ---
 
